@@ -29,36 +29,7 @@ import MistralIcon from "../icons/mistral";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-
-const formSchema = z.object({
-  model: z.string().min(1, "Model is required!"),
-  temperature: z
-    .number()
-    .min(0, "Temperature must be at least 0!")
-    .max(1, "Temperature must be at most 1!"),
-  content: z.string().refine(value => !!value, {
-    message: "aaa",
-  }),
-  // .min(50, "Content must be at least 50!")
-  // .max(500, "Content should not exceed most 500 characters limit!"),
-  type: z.enum(["personal", "brand"], {
-    errorMap: () => ({ message: "Tone is require" }),
-  }),
-  tone: z.enum(
-    [
-      "professional",
-      "casual",
-      "sarcastic",
-      "funny",
-      "passionate",
-      "thoughtful",
-    ],
-    {
-      errorMap: () => ({ message: "Tone is require" }),
-    }
-  ),
-  emojis: z.boolean(),
-});
+import { formSchema } from "@/schemas/formSchema";
 
 export default function UserInput() {
   const form = useForm<z.infer<typeof formSchema>>({
