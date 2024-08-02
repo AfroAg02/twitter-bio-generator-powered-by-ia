@@ -17,21 +17,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { BioContext } from "@/context/BioContext";
+import { generateBio } from "@/services/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Info, Loader2 } from "lucide-react";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import MetaIcon from "../icons/meta";
 import MistralIcon from "../icons/mistral";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
-import { Info } from "lucide-react";
-import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
-import { generateBio } from "@/app/actions";
+import { Textarea } from "../ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const formSchema = z.object({
   model: z.string().min(1, "Model is required!"),
@@ -39,10 +36,11 @@ const formSchema = z.object({
     .number()
     .min(0, "Temperature must be at least 0!")
     .max(1, "Temperature must be at most 1!"),
-  content: z
-    .string()
-    .min(50, "Content must be at least 50!")
-    .max(500, "Content should not exceed most 500 characters limit!"),
+  content: z.string().refine(value => !!value, {
+    message: "aaa",
+  }),
+  // .min(50, "Content must be at least 50!")
+  // .max(500, "Content should not exceed most 500 characters limit!"),
   type: z.enum(["personal", "brand"], {
     errorMap: () => ({ message: "Tone is require" }),
   }),
@@ -75,8 +73,11 @@ export default function UserInput() {
     },
   });
 
+  const { setOutput, setLoading, loading } = useContext(BioContext);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    setLoading(true);
+
     const userInputValues = `
     User Input: ${values.content}
     Bio Tone: ${values.tone}
@@ -90,10 +91,12 @@ export default function UserInput() {
         values.temperature,
         values.model
       );
-      console.log(data);
-      
+
+      setOutput(data);
+      setLoading(false);
     } catch (e) {
       console.log(e);
+      setLoading(false);
     }
   }
   return (
@@ -331,7 +334,8 @@ export default function UserInput() {
               />
             </div>
           </fieldset>
-          <Button className="rounded" type="submit">
+          <Button className="rounded" type="submit" disabled={loading}>
+            {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             Generate
           </Button>
         </form>
