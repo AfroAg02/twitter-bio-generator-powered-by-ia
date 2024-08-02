@@ -206,7 +206,7 @@ export default function UserInput() {
                       <Slider
                         defaultValue={[1]}
                         min={0}
-                        max={2}
+                        max={1}
                         step={0.1}
                         onValueChange={val => {
                           onChange(val[0]);
@@ -246,7 +246,7 @@ export default function UserInput() {
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="type"
@@ -314,7 +314,7 @@ export default function UserInput() {
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="emojis"
