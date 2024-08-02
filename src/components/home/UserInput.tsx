@@ -31,6 +31,7 @@ import {
 import { Info } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
+import { generateBio } from "@/app/actions";
 
 const formSchema = z.object({
   model: z.string().min(1, "Model is required!"),
@@ -47,7 +48,7 @@ const formSchema = z.object({
   }),
   tone: z.enum(
     [
-      "proffesional",
+      "professional",
       "casual",
       "sarcastic",
       "funny",
@@ -69,15 +70,31 @@ export default function UserInput() {
       temperature: 1,
       content: "",
       type: "personal",
-      tone: "proffesional",
+      tone: "professional",
       emojis: false,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const userInputValues = `
+    User Input: ${values.content}
+    Bio Tone: ${values.tone}
+    Bio Type: ${values.type}
+    Add Emojis: ${values.emojis}
+    `;
+
+    try {
+      const { data } = await generateBio(
+        userInputValues,
+        values.temperature,
+        values.model
+      );
+      console.log(data);
+      
+    } catch (e) {
+      console.log(e);
+    }
   }
   return (
     <div className="relative flex flex-col items-start gap-8">
@@ -314,7 +331,9 @@ export default function UserInput() {
               />
             </div>
           </fieldset>
-          <Button className="rounded" type="submit">Generate</Button>
+          <Button className="rounded" type="submit">
+            Generate
+          </Button>
         </form>
       </Form>
     </div>
