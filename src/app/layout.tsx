@@ -7,10 +7,9 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
-
 export const metadata: Metadata = {
-  title: "AI Bot",
-  description: "Generate bios using Artificial Intelligence",
+  title: "AI Bio",
+  description: "Generate Twitter Bios using Artificial Intelligence",
 };
 
 export default function RootLayout({
@@ -21,12 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(GeistSans.variable, "font-sans")}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <GridPattern width={60} height={60} className="-z-10 opacity-70" />
 
           <TooltipProvider>{children}</TooltipProvider>
